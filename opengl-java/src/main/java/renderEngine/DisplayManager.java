@@ -19,7 +19,7 @@ public class DisplayManager {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
     private static final int FPS_CAP = 60;
-    private static final String TITLE = "Water simulation";
+    private static final String TITLE = "WaterTile simulation";
 
     private static long lastFrameTime;
     private static float delta;

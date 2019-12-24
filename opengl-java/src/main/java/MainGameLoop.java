@@ -13,6 +13,7 @@ import renderEngine.*;
 import models.RawModel;
 import texture.ModelTexture;
 import water.Water;
+import water.WaterTile;
 import water.WaterFrameBuffers;
 import water.WaterRenderer;
 
@@ -36,40 +37,35 @@ public class MainGameLoop {
         Camera camera = new FocusedCamera(new Vector3f(20, 25, 20));
         Light light = new Light(new Vector3f(20000,20000,2000),new Vector3f(1,1,1));
 
-        WaterFrameBuffers fbos = new WaterFrameBuffers();
-
-        Entity entity1 = new Entity(staticModel, new Vector3f(0, 8, 0), 0, 0, 0, 1);
-        Entity entity2 = new Entity(staticModel, new Vector3f(20, 15, 20), 0, -35, -15, 2);
+        Entity dragon = new Entity(staticModel, new Vector3f(0, 8, 0), 0, 0, 0, 1);
+        Entity bigDragon = new Entity(staticModel, new Vector3f(20, 15, 20), 0, -35, -15, 2);
         List<Entity> entities = new ArrayList<>();
-        entities.add(entity1);
-        entities.add(entity2);
+        entities.add(dragon);
+        entities.add(bigDragon);
 
-        List<Water> waters = new ArrayList<>();
-        int waterLevel = 10;
-        for (int i = -20; i <= 20; i++) {
-            for (int j = -20; j <= 20; j++) {
-                waters.add(new Water(i, j, waterLevel));
-            }
-        }
+        Water water = new Water(20, 20, 10);
 
+        WaterFrameBuffers fbos = new WaterFrameBuffers();
         MasterRenderer renderer = new MasterRenderer(loader);
         WaterRenderer waterRenderer = new WaterRenderer(loader, renderer.getProjectionMatrix(), fbos);
+
         while(!Display.isCloseRequested()){
             camera.move();
-            entity2.move();
+            bigDragon.move();
+            water.move();
 
             GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
             fbos.bindReflectionFrameBuffer();
-            float distance = 2 * (camera.getPosition().y - waterLevel);
+            float distance = 2 * (camera.getPosition().y - water.getLevel());
             camera.getPosition().y -= distance;
             camera.invertPitch();
-            renderer.renderScene(entities, light, camera, new Vector4f(0, 1, 0, -waterLevel));
+            renderer.renderScene(entities, light, camera, new Vector4f(0, 1, 0, -water.getLevel()));
             camera.invertPitch();
             camera.getPosition().y += distance;
 
             fbos.unbindCurrentFrameBuffer();
-            renderer.renderScene(entities, light, camera, new Vector4f(0, 1, 0, -waterLevel));
-            waterRenderer.render(waters, camera);
+            renderer.renderScene(entities, light, camera, new Vector4f(0, 1, 0, -water.getLevel()));
+            waterRenderer.render(water, camera);
             GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
 
             DisplayManager.updateDisplay();

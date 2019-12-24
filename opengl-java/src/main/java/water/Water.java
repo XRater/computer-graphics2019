@@ -1,30 +1,49 @@
 package water;
 
+import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Water {
 
-    public static final float TILE_SIZE = 80;
+    private float level;
+    private List<WaterTile> tiles = new ArrayList<>();
 
-    private float height;
-    private float x,z;
-
-    public Water(float centerX, float centerZ, float height){
-        this.x = centerX * TILE_SIZE;
-        this.z = centerZ * TILE_SIZE;
-        this.height = height;
+    public Water(int width, int height, float level) {
+        this.level = level;
+        for (int i = -width; i <= width; i++) {
+            for (int j = -height; j <= height; j++) {
+                tiles.add(new WaterTile(i, j));
+            }
+        }
     }
 
-    public float getHeight() {
-        return height;
+    public void move() {
+        updatedLevel();
     }
 
-    public float getX() {
-        return x;
+    public List<WaterTile> getTiles() {
+        return tiles;
     }
 
-    public float getZ() {
-        return z;
+    public float getLevel() {
+        return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
 
+    private void updatedLevel() {
+        if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
+            level += 0.3f;
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+            level -= 0.3f;
+        }
+        level = Math.min(level, 20);
+        level = Math.max(level, 0);
+    }
 
 }
