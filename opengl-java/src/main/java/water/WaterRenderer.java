@@ -50,6 +50,7 @@ public class WaterRenderer {
     }
 
     private void prepareRender(Camera camera){
+        GL11.glDisable(GL11.GL_CULL_FACE);
         shader.start();
         shader.loadViewMatrix(camera);
         moveFactor += WAVE_SPEED * DisplayManager.getFrameTimeSecond();
@@ -67,6 +68,8 @@ public class WaterRenderer {
         GL20.glDisableVertexAttribArray(0);
         GL30.glBindVertexArray(0);
         shader.stop();
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
     }
 
     private void setUpVAO(Loader loader) {
