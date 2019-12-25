@@ -2,7 +2,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'application'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 group 'opengl'
@@ -12,6 +11,13 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+sourceSets.main.java.srcDirs = ['src']
+applicationDefaultJvmArgs = ['-Djava.library.path=libs/native/linux']
+
+application {
+    mainClassName = 'MainGameLoop'
 }
 
 repositories {
